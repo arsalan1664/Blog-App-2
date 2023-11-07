@@ -82,7 +82,7 @@ exports.loginUsers = async (req, res) => {
 
         // validation
         if (!email || !passward) {
-            return res.status(500).send({
+            return res.status(400).send({
                 message: "Fill all Fields",
                 success: false
             })

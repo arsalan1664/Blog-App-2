@@ -2,6 +2,7 @@ import {
     zodResolver
 } from "@hookform/resolvers/zod"
 import {
+    SubmitHandler,
     useForm
 } from "react-hook-form"
 import * as z from "zod"
@@ -32,6 +33,9 @@ import { useDispatch } from "react-redux"
 import { authActions } from "@/features/AuthSlice"
 import { useNavigate } from "react-router-dom"
 
+
+
+
 const formSchema = z.object({
     email: z.string().email(),
     passward: z.string()
@@ -39,14 +43,14 @@ const formSchema = z.object({
 
 
 
+
+
+
+
+
 export function Login() {
-// const {data} = useGetUserQuery('');
-// console.log(data);
-
     const dispatch = useDispatch()
-
-
-    const form = useForm < z.infer < typeof formSchema >> ({
+    const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             email: "",
@@ -55,20 +59,32 @@ export function Login() {
     })
 
     // 2. Define a submit handler.
-    const [postUser] = usePostLoginMutation()
-    const navigate = useNavigate()
-
+    const [postLogin, { error,data,isError,isSuccess }] = usePostLoginMutation()
+    
     
 
-     function onSubmit (values : z.infer < typeof formSchema >) {
+    const navigate = useNavigate()
+
+    const onSubmit=(values: z.infer<typeof formSchema>) => {
+        console.log(values);
         try {
-             postUser(values)
-             dispatch(authActions.login())
-             alert('Login Successful')
-             navigate("/")
-            console.log(values)
+            postLogin(values);
+            if(isSuccess){
+                dispatch(authActions.login())
+                localStorage.setItem('id', data?.user._id )
+                navigate("/")
+                alert('Login Successful')
+                console.log(data);
+                
+            }
+            if(isError){
+                alert(error)
+                console.log(error)
+                const errorjson = JSON.stringify(error)
+                console.log(errorjson)
+            }
         } catch (error) {
-            console.log(error);   
+            console.log(error);
         }
 
     }
@@ -83,12 +99,12 @@ export function Login() {
                 <CardContent>
                     <Form {...form}>
                         <form onSubmit={
-                                form.handleSubmit(onSubmit)
-                            }
+                            form.handleSubmit(onSubmit)
+                        }
                             className="space-y-5">
                             <FormField control={
-                                    form.control
-                                }
+                                form.control
+                            }
                                 name="email"
                                 render={
                                     ({
@@ -97,15 +113,15 @@ export function Login() {
                                         <FormItem>
                                             <FormLabel>Email</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Email.." {...field}/>
+                                                <Input placeholder="Email.." {...field} />
                                             </FormControl>
-                                            <FormMessage/>
+                                            <FormMessage />
                                         </FormItem>
                                     )
-                                }/>
+                                } />
                             <FormField control={
-                                    form.control
-                                }
+                                form.control
+                            }
                                 name="passward"
                                 render={
                                     ({
@@ -114,12 +130,12 @@ export function Login() {
                                         <FormItem>
                                             <FormLabel>Passward</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Passward.." {...field}/>
+                                                <Input placeholder="Passward.." {...field} />
                                             </FormControl>
-                                            <FormMessage/>
+                                            <FormMessage />
                                         </FormItem>
                                     )
-                                }/>
+                                } />
                             <Button type="submit">Submit</Button>
                         </form>
                     </Form>

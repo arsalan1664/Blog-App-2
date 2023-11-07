@@ -8,7 +8,7 @@ function Footer() {
 
                         <hr className="border-gray-600"/>
                         <p className="w-full text-center my-12 text-gray-600">
-                            Copyright © 2020 Besnik Creative
+                            Copyright © 2023 Arsalan Ali
                         </p>
                     </div>
                 </div>

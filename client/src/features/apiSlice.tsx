@@ -12,18 +12,21 @@ export interface registerValues {
     email: string,
     passward: string
 }
-export interface user {
+export interface userTypes {
     message: string,
     success: boolean,
-    user: []
+    user: any[],
 }
 export const apiSlice = createApi({
     baseQuery: fetchBaseQuery({
-        baseUrl: 'https://8080-arsalan1664-codespacesb-vld4116o9wh.ws-us105.gitpod.io'
+        baseUrl: 'https://ubiquitous-space-engine-j6479g67x5pfpgvq-8080.app.github.dev',
+        
     }),
+    tagTypes: ['user'], 
     endpoints: (build) => ({
-        getUser: build.query < string, string > ({
-            query: () => `/api/v1/user/all-users`
+        getUser: build.query < userTypes, void > ({
+            query: () => `/api/v1/user/all-users`,
+            providesTags: ['user'],
         }),
         postLogin: build.mutation < loginValues, loginValues > ({
             query: (values) => ({
@@ -47,3 +50,4 @@ export const {
     usePostLoginMutation,
     usePostRegisterMutation,
 } = apiSlice
+
