@@ -28,8 +28,6 @@ import {
     CardContent,
 } from "./ui/card"
 import { usePostLoginMutation } from "@/features/apiSlice"
-import { useDispatch } from "react-redux"
-import { authActions } from "@/features/AuthSlice"
 import { useNavigate } from "react-router-dom"
 
 
@@ -44,7 +42,6 @@ const formSchema = z.object({
 
 
 export function Login() {
-    const dispatch = useDispatch()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -64,12 +61,10 @@ export function Login() {
         try {
             postLogin(values);
             if (isSuccess) {
-                dispatch(authActions.login())
                 localStorage.setItem('id', data?.user._id)
                 navigate("/")
                 alert('Login Successful')
                 console.log(data);
-
             }
             if (isError) {
                 alert(error)
@@ -84,7 +79,7 @@ export function Login() {
     }
 
     return (
-        <div className="flex items-center justify-center h-full">
+        <div className="flex items-center justify-center h-[75%]">
             <Card className="w-[350px]">
                 <CardHeader>
                     <CardTitle className="text-center text-3xl">Login</CardTitle>

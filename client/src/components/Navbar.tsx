@@ -5,7 +5,7 @@ import {
     Button
 } from "./ui/button"
 import {
-    Link, Navigate, useNavigate
+    Link, useNavigate
 } from "react-router-dom"
 import {
     useDispatch,
@@ -13,7 +13,6 @@ import {
 } from 'react-redux'
 
 import {
-    Cross,
     Menu,
     Power
 } from "lucide-react";
@@ -33,12 +32,18 @@ import { authActions } from "@/features/AuthSlice";
 
 
 function Navbar() {
+    const navigate = useNavigate()
     const userLogin = useSelector((state: RootState) => state.authSlice.isLogin);
     const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const user = localStorage.getItem("id")
+    if(!user){
+        dispatch(authActions.logout())
+    }if(user){
+        dispatch(authActions.login())
+    }
 
     const handleLogout = () => {
-        dispatch(authActions.logout());
+        // dispatch(authActions.logout());
         localStorage.removeItem('id')
         alert("Logout Successfully")
         navigate("/")
@@ -73,9 +78,6 @@ function Navbar() {
                                 <Button variant={'outline'}>
                                     <Link to={'/my-blog'}>My Blog</Link>
                                 </Button>
-                                <Button variant={'default'} >
-                                    <Link className="flex items-center gap-2" to={'/create-blog'}><Cross size={16} />Create Blog</Link>
-                                </Button>
                                 <Button onClick={handleLogout} variant={'destructive'}>
                                     <Link to={"/login"}><Power size={16} /></Link>
                                 </Button>
@@ -93,7 +95,7 @@ function Navbar() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-screen">
                             {userLogin && (
-                                <Card className="p-3 w-full bg-purple-500 text-center">
+                                <Card className="p-3 w-full border-2 text-center">
                                     <DropdownMenuItem>Blog</DropdownMenuItem>
                                     <DropdownMenuItem>My Blog</DropdownMenuItem>
                                     <DropdownMenuItem>
