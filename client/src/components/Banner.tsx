@@ -1,7 +1,7 @@
 function Banner() {
     return (
-        <div className="flex flex-col justify-center items-center w-full mt-5">
-            <div className="flex w-full flex-col rounded-md bg-cover px-[30px] py-[30px] md:px-[64px] md:py-[56px]  "
+        <div className="flex flex-col justify-center items-center w-full">
+            <div className="flex w-full flex-col  bg-cover px-[30px] py-[30px] md:px-[64px] md:py-[56px]  "
                 style={
                     {
                         backgroundImage: 'url("https://raw.githubusercontent.com/horizon-ui/horizon-tailwind-react-ts-corporate/main/src/assets/img/nfts/NftBanner1.png")'
@@ -15,9 +15,9 @@ function Banner() {
                         Discover stories, thinking, and expertise from writers on any topic.
                     </p>
                     <div className="mt-[36px] flex items-center justify-between gap-4 sm:justify-start 2xl:gap-10">
-                        <button className="text-black linear rounded-md bg-white px-4 py-2 text-center text-base font-medium transition duration-200 hover:!bg-white/80 active:!bg-white/70">
+                        {/* <button className="text-black linear rounded-md bg-white px-4 py-2 text-center text-base font-medium transition duration-200 hover:!bg-white/80 active:!bg-white/70">
                             Discover now
-                        </button>
+                        </button> */}
 
                     </div>
                 </div>

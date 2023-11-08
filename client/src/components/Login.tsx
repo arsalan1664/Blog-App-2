@@ -2,7 +2,6 @@ import {
     zodResolver
 } from "@hookform/resolvers/zod"
 import {
-    SubmitHandler,
     useForm
 } from "react-hook-form"
 import * as z from "zod"
@@ -44,10 +43,6 @@ const formSchema = z.object({
 
 
 
-
-
-
-
 export function Login() {
     const dispatch = useDispatch()
     const form = useForm<z.infer<typeof formSchema>>({
@@ -59,25 +54,24 @@ export function Login() {
     })
 
     // 2. Define a submit handler.
-    const [postLogin, { error,data,isError,isSuccess }] = usePostLoginMutation()
-    
-    
+    const [postLogin, { error, data, isError, isSuccess }] = usePostLoginMutation()
+
+
 
     const navigate = useNavigate()
 
-    const onSubmit=(values: z.infer<typeof formSchema>) => {
-        console.log(values);
+    const onSubmit = (values: z.infer<typeof formSchema>) => {
         try {
             postLogin(values);
-            if(isSuccess){
+            if (isSuccess) {
                 dispatch(authActions.login())
-                localStorage.setItem('id', data?.user._id )
+                localStorage.setItem('id', data?.user._id)
                 navigate("/")
                 alert('Login Successful')
                 console.log(data);
-                
+
             }
-            if(isError){
+            if (isError) {
                 alert(error)
                 console.log(error)
                 const errorjson = JSON.stringify(error)

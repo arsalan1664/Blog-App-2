@@ -2,31 +2,56 @@ import Blog from "./components/Blog";
 import Navbar from "./components/Navbar";
 import {
     Routes,
-    Route
+    Route,
+    useNavigate
 } from 'react-router-dom'
-import {Register} from "./components/Register";
+import { Register } from "./components/Register";
 import {
     Login
 } from "./components/Login";
 import MyBlog from "./components/MyBlog";
 import Footer from "./components/Footer";
+import { CreateBlog } from "./components/CreateBlog";
+import { ReactNode, useEffect } from 'react';
+
+
+interface ProtectedProps {
+  children: ReactNode;
+}
+
+export function Protected({ children }: ProtectedProps): ReactNode {
+  const navigate = useNavigate();
+  const userid = localStorage.getItem('id');
+  if(!userid){
+    useEffect(()=>navigate('/login'),[userid])
+    
+  }
+
+  return userid && (
+    <>{children}</>
+  )
+}
+
 
 function App() {
 
     return (
         <div className="relative h-screen w-screen bg-background text-foreground">
-            <Navbar/>
+            <Navbar />
             <Routes>
-                <Route path='/'
-                    element={<Blog/>}/>
                 <Route path='/login'
-                    element={<Login/>}/>
+                    element={<Login />} />
                 <Route path='/register'
-                    element={<Register/>}/>
+                    element={<Register />} />
+                <Route path='/'
+                    element={<Blog />} />
                 <Route path='/my-blog'
-                    element={<MyBlog/>}/>
+                    element={<Protected><MyBlog /></Protected>} />
+                <Route path='/create-blog'
+                    element={<Protected><CreateBlog /></Protected>} />
             </Routes>
-            <Footer/>
+            <Footer />
+            
         </div>
     )
 }

@@ -3,9 +3,14 @@ import {
     fetchBaseQuery
 } from '@reduxjs/toolkit/query/react'
 
-export interface loginValues {
+export interface loginValuesRes {
     email: string,
-    passward: string
+    passward: string,
+    user: any
+}
+export interface loginValuesReq {
+    email: string,
+    passward: string,
 }
 export interface registerValues {
     username: string
@@ -28,7 +33,7 @@ export const apiSlice = createApi({
             query: () => `/api/v1/user/all-users`,
             providesTags: ['user'],
         }),
-        postLogin: build.mutation < loginValues, loginValues > ({
+        postLogin: build.mutation < loginValuesRes, loginValuesReq > ({
             query: (values) => ({
                 url: "/api/v1/user/login",
                 method: "POST",

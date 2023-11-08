@@ -29,6 +29,9 @@ import {
 } from "./ui/card"
 
 import { usePostRegisterMutation } from "@/features/apiSlice"
+import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+
 
 const formSchema = z.object({
     username: z.string(),
@@ -37,7 +40,10 @@ const formSchema = z.object({
 })
 
 
-export function Register() {
+
+export function Register() 
+{
+    const navigate = useNavigate()
     const form = useForm < z.infer < typeof formSchema >> ({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -50,11 +56,12 @@ export function Register() {
     // 2. Define a submit handler.
     function onSubmit(values : z.infer < typeof formSchema >) {
         postRegister(values)
-        console.log(values)
+        navigate('/login')
+        alert('Register Successful')
     }
 
     return (
-        <div className="flex items-center justify-center h-full">
+        <div className="flex items-center justify-center h-[75%]">
             <Card className="w-[350px]">
                 <CardHeader>
                     <CardTitle className="text-center text-3xl">Register</CardTitle>

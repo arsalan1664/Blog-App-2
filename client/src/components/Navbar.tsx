@@ -5,7 +5,7 @@ import {
     Button
 } from "./ui/button"
 import {
-    Link
+    Link, Navigate, useNavigate
 } from "react-router-dom"
 import {
     useDispatch,
@@ -13,6 +13,7 @@ import {
 } from 'react-redux'
 
 import {
+    Cross,
     Menu,
     Power
 } from "lucide-react";
@@ -32,16 +33,16 @@ import { authActions } from "@/features/AuthSlice";
 
 
 function Navbar() {
-    const userLogin = useSelector((state: RootState) => state.authSlice.isLogin);;
+    const userLogin = useSelector((state: RootState) => state.authSlice.isLogin);
     const dispatch = useDispatch()
-    
+    const navigate = useNavigate()
+
     const handleLogout = () => {
         dispatch(authActions.logout());
-        alert("Login Successful")
+        localStorage.removeItem('id')
+        alert("Logout Successfully")
+        navigate("/")
     };
-    
-    
-    console.log(userLogin);
     return (
         <nav className="flex items-center justify-center h-[10%] w-full bg-background text-foreground border-b ">
             <div className="flex items-center justify-between h-[70%] w-[95%] ">
@@ -52,58 +53,61 @@ function Navbar() {
 
                 <div className="hidden sm:flex sm:items-center sm:gap-2">
                     {
-                    ! userLogin && (
-                        <>
-                            <Button>
-                                <Link to={"/register"}>Register</Link>
-                            </Button>
-                            <Button>
-                                <Link to={"/login"}>Login</Link>
-                            </Button>
-                        </>
-                    )
-                }
+                        !userLogin && (
+                            <>
+                                <Button>
+                                    <Link to={"/register"}>Register</Link>
+                                </Button>
+                                <Button>
+                                    <Link to={"/login"}>Login</Link>
+                                </Button>
+                            </>
+                        )
+                    }
                     {
-                    userLogin && (
-                        <>
-                            <Button variant={'outline'}>
-                                <Link to={'/'}>Blog</Link>
-                            </Button>
-                            <Button variant={'outline'}>
-                                <Link to={'/my-blog'}>My Blog</Link>
-                            </Button>
-                            <Button onClick={handleLogout} variant={'outline'}>
-                                <Link to={"/login"}><Power size={16}/></Link>
-                            </Button>
-                        </>
-                    )
-                }
-                    <ModeToggle/>
+                        userLogin && (
+                            <>
+                                <Button variant={'outline'}>
+                                    <Link to={'/'}>Blog</Link>
+                                </Button>
+                                <Button variant={'outline'}>
+                                    <Link to={'/my-blog'}>My Blog</Link>
+                                </Button>
+                                <Button variant={'default'} >
+                                    <Link className="flex items-center gap-2" to={'/create-blog'}><Cross size={16} />Create Blog</Link>
+                                </Button>
+                                <Button onClick={handleLogout} variant={'destructive'}>
+                                    <Link to={"/login"}><Power size={16} /></Link>
+                                </Button>
+                            </>
+                        )
+                    }
+                    <ModeToggle />
                 </div>
 
                 <div className="sm:hidden flex items-center gap-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline"
-                                size={"icon"}><Menu size={16}/></Button>
+                                size={"icon"}><Menu size={16} /></Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-screen">
                             {userLogin && (
-                            <Card className="p-3 w-full bg-purple-500 text-center">
-                                <DropdownMenuItem>Blog</DropdownMenuItem>
-                                <DropdownMenuItem>My Blog</DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    Log out
-                                </DropdownMenuItem>
-                            </Card>)}
+                                <Card className="p-3 w-full bg-purple-500 text-center">
+                                    <DropdownMenuItem>Blog</DropdownMenuItem>
+                                    <DropdownMenuItem>My Blog</DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        Log out
+                                    </DropdownMenuItem>
+                                </Card>)}
                             {!userLogin && (
-                            <Card className="p-3 w-full bg-purple-500 text-center">
-                                <DropdownMenuItem>Register</DropdownMenuItem>
-                                <DropdownMenuItem>Login</DropdownMenuItem>
-                            </Card>)}
+                                <Card className="p-3 w-full border-2  text-center">
+                                    <DropdownMenuItem>Register</DropdownMenuItem>
+                                    <DropdownMenuItem>Login</DropdownMenuItem>
+                                </Card>)}
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <ModeToggle/>
+                    <ModeToggle />
                 </div>
             </div>
         </nav>
