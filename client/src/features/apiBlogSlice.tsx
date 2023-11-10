@@ -22,9 +22,22 @@ export interface UserBlogsResponse {
   success: boolean;
   userBlog: Blog;
 }
-
+export interface DeleteResponse {
+    success: boolean;
+    message: string;
+}
+export interface DeleteResponse2 {
+  data: DeleteResponse;
+}
 export interface UserId {
   id: string;
+}
+
+export interface BlogReq {
+  title: string;
+  descryption: string;
+  image: string;
+  user: string;
 }
 
 export const apiBlogSlice = createApi({
@@ -39,20 +52,29 @@ export const apiBlogSlice = createApi({
     }),
     getMyBlogs: build.query<UserBlogsResponse, string>({
       query: (id) => `/api/v1/blog/user-blog/${id}`,
-      providesTags: (result, error, id) => [{ type: 'Blog', id }],
+      providesTags: ["Blog"],
     }),
-    // postLogin: build.mutation<loginValues, loginValues>({
-    //     query: (values) => ({
-    //         url: "/api/v1/user/login",
-    //         method: "POST",
-    //         body: values
-    //     })
-    // }),
+    postBlog: build.mutation<BlogReq, BlogReq>({
+      query: (values) => ({
+        url: "/api/v1/blog/create-blog",
+        method: "POST",
+        body: values
+      }),
+      invalidatesTags: ["Blog"],
+    }),
+    deleteBlog: build.mutation<DeleteResponse2, string>({
+      query: (id) => ({
+        url: `/api/v1/blog/delete-blog/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Blog"],
+    }),
   }),
 });
 
 export const {
   useGetAllBlogsQuery,
   useGetMyBlogsQuery,
-  // usePostLoginMutation,
+  usePostBlogMutation,
+  useDeleteBlogMutation,
 } = apiBlogSlice;

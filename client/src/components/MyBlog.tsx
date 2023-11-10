@@ -1,49 +1,41 @@
-import { useGetMyBlogsQuery } from "@/features/apiBlogSlice"
+import { useDeleteBlogMutation, useGetMyBlogsQuery } from "@/features/apiBlogSlice"
 import { Button } from "./ui/button"
-import { Cross, Pencil, Trash2 } from "lucide-react"
-import { Label } from "@radix-ui/react-dropdown-menu"
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "./ui/dialog"
-import { Input } from "./ui/input"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { Cross, Trash2 } from "lucide-react"
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "./ui/dialog"
+import { BlogForm } from "./BlogForm"
+import { Toaster } from "./ui/toaster"
+import { Progress } from "./ui/progress"
+import { toast } from "./ui/use-toast"
 
-
-const FormSchema = z.object({
-  bio: z
-    .string()
-    .min(10, {
-      message: "Bio must be at least 10 characters.",
-    })
-    .max(160, {
-      message: "Bio must not be longer than 30 characters.",
-    }),
-})
 
 
 
 export default function Blog() {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-  })
- 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
-    
-  }
-
-
-
-
 
   const userid = localStorage.getItem('id')
   if (!userid) {
     return <p>Pleae login first...</p>
   }
+  const [deleteBlog] = useDeleteBlogMutation();
+
+  const handleDelete = async (id : string )=>{
+    try {
+      const result:any = await deleteBlog(id)
+      console.log(result.data.success);
+      if(result.data.success){
+        toast({
+          title: "Deleted Successfully"
+        })
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
   const { data, isLoading, isError } = useGetMyBlogsQuery(userid)
 
   if (isLoading) {
-    return <p>Loading...</p>
+    return <p className="min-h-[75%] flex flex-col gap-2 items-center justify-center"><p>Loading..</p><Progress value={33} className="w-1/3"/>
+    </p>
   }
 
   if (isError) {
@@ -51,10 +43,12 @@ export default function Blog() {
   }
 
   const userBlogs = data?.userBlog?.blogs || []
+  console.log(userBlogs);
+  
 
 
   return (
-    <>
+    <div className="min-h-[75%]">
       <div className="flex justify-end items-end h-16 pr-10">
         <Dialog>
           <DialogTrigger asChild>
@@ -69,66 +63,7 @@ export default function Blog() {
                 Create new blog here. Click submit when you're done.
               </DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
-                  Name
-                </Label>
-                <Input
-                  id="name"
-                  defaultValue=""
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="username" className="text-right">
-                  Username
-                </Label>
-                <Input
-                  id="username"
-                  defaultValue=""
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="username" className="text-right">
-                  Username
-                </Label>
-                <Input
-                  id="username"
-                  defaultValue=""
-                  className="col-span-3"
-                />
-              </div>
-            </div>
-            {/* <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-                <FormField
-                  control={form.control}
-                  name="bio"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Bio</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Tell us a little bit about yourself"
-                          className="resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        You can <span>@mention</span> other users and organizations.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit">Submit</Button>
-              </form>
-            </Form> */}
-            <DialogFooter>
-              <Button type="submit">Save changes</Button>
-            </DialogFooter>
+            <BlogForm />
           </DialogContent>
         </Dialog>
       </div>
@@ -136,8 +71,8 @@ export default function Blog() {
         <section className="bg-background ">
           <div className="container px-6 pb-5 mx-auto ">
             <div className="grid grid-cols-1 gap-8 mt-8 md:mt-8 md:grid-cols-2">
-              {userBlogs.map((item, index) => (
-                <div className="lg:flex  rounded-2xl group" key={index}>
+              {userBlogs.map((item:any) => (
+                <div className="lg:flex  rounded-2xl group" key={item._id}>
                   <img className="object-cover w-full h-56 rounded-lg lg:w-64" src={item.image} alt="" />
                   <div className="flex flex-col justify-between py-6 lg:mx-6">
                     <a href="#" className="text-xl font-semibold text-gray-800 hover:underline dark:text-white">
@@ -150,16 +85,18 @@ export default function Blog() {
                       {item.createdAt}
                     </span>
                     <div className=" hidden group-hover:flex group-hover:justify-end group-hover:gap-4">
-                      <Button variant={'outline'} size={'sm'}><Pencil /></Button>
-                      <Button variant={'outline'} size={'sm'}><Trash2 /></Button>
+                      {/* <Button variant={'outline'} size={'sm'}><Pencil /></Button> */}
+                      <Button onClick={()=>handleDelete(item._id)} variant={'destructive'} size={'sm'}><Trash2 /></Button>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
+          <Toaster />
         </section>
-      </div></>
+      </div>
+    </div>
   )
 }
 
