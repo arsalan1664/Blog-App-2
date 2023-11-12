@@ -24,7 +24,7 @@ export interface userTypes {
 }
 export const apiSlice = createApi({
     baseQuery: fetchBaseQuery({
-        baseUrl: 'https://ubiquitous-space-engine-j6479g67x5pfpgvq-8080.app.github.dev',
+        baseUrl: import.meta.env.VITE_URL,
         
     }),
     tagTypes: ['user'], 
