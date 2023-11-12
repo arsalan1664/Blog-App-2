@@ -1,7 +1,6 @@
 {
-    "buildCommand": "pnpm install && cd client && pnpm install && ./node_modules/vite/bin/vite.js build",
+    "buildCommand": "pnpm install",
     "outputDirectory": "client/dist",
-    "framework": "vite",
     "rewrites": [
         {
             "source": "/(.*)",
