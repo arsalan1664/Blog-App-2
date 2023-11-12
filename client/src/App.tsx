@@ -61,6 +61,7 @@ function App() {
                 <Route path='/create-blog'
                     element={<Protected><CreateBlog /></Protected>} />
             </Routes>
+            {/* {################################################} */}
             <Footer />
             
         </div>
