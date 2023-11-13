@@ -6,6 +6,7 @@ const morgan = require("morgan")
 const connectDB = require("./config/db")
 const userRoute = require("./routes/userRoute")
 const blogRoute = require("./routes/blogRoute")
+const path = require('path');
 
 
 // dotenv
@@ -27,6 +28,11 @@ app.use(morgan('tiny'))
 // route
 app.use('/api/v1/user', userRoute)
 app.use('/api/v1/blog', blogRoute)
+
+
+// Serve static files from the public directory
+
+app.use(express.static('client/dist'));
 
 // port
 const PORT = process.env.PORT || 8080

@@ -29,7 +29,6 @@ import {
 } from "./ui/card"
 
 import { usePostRegisterMutation } from "@/features/apiSlice"
-import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
 
