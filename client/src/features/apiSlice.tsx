@@ -24,8 +24,7 @@ export interface userTypes {
 }
 export const apiSlice = createApi({
     baseQuery: fetchBaseQuery({
-        baseUrl: import.meta.env.VITE_URL,
-        
+        baseUrl: "https://arsalan-blog-app.vercel.app/"
     }),
     tagTypes: ['user'], 
     endpoints: (build) => ({
