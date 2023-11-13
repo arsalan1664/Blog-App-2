@@ -32,7 +32,11 @@ app.use('/api/v1/blog', blogRoute)
 
 // Serve static files from the public directory
 
-app.use(express.static('client/dist'));
+// app.use(express.static('client/dist'));
+app.use(express.static(path.join(__dirname, "./client/dist")))
+app.get("*", function (req,res){
+    res.sendFile(path.join(__dirname, "./client/dist/index.html"))
+})
 
 // port
 const PORT = process.env.PORT || 8080
